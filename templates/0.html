@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+
+{% block title %} index {% endblock %}
+
+{% block login %}
+<div>
+<form name="login_form" action="/loggingin" method = "post">
+    <input autofocus autocomplete name="one_word" required placeholder="Key in the one word here" type="password">
+    <input name="login_submit" type="submit" value="login">
+</form>
+</div>
+{% endblock %}

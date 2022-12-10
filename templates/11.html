@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block title %} preorder or wish {% endblock %}
+
+{% block js %}
+<script src={{ url_for('static', filename='js/code.js') }}></script>
+{% endblock %}
+
+{% block preorder %}
+<div class="pickup">
+    <label name="processing">Processing:<label>
+    <h3> {{now_num}} to pick up {{pickup_date}}.</h3>
+    <form name="preorder_form" action="/completing" method="post">
+        <p>
+            <select id="pickup_time" name="pickup_time">
+                <option disable selected>Preferred pick-up time?</option>
+            {% for shift in actual_shifts %}
+                <option>{{shift}}</option>
+            {% endfor %}
+            </select>
+            <label for='pickup_time'>Each time span is 2 hours long.</label>
+        </p>
+        <p>
+            <input required autofocus autocomplete="off" id="contact" name="contact" type="text" placeholder="email" >
+            <label for='contact'>A valid email allows you to cancel preorder directly.</label>
+        </p>
+        <p>
+            <input autocomplete="off" id="phone" name="phone" type="text" placeholder="phone number" >
+        </p>
+        <p>
+            <input autocomplete="off" id="title" name="title" type="text" placeholder="name and preferred title" >
+            <input type="checkbox" id='RememberMe'>
+            <label for="RememberMe">Remember me</label>
+            <span id="warningsign">&#9888</span>
+            <input class="erase" name="erase" type="button" value="Erase">
+            <label for="erase">all input.</label>
+        </p>
+        <p>    
+            <input id="complete" name="pickup_submit" type="submit" value="Complete">
+        </p>
+        </form>
+</div>
+{% endblock %}
+
+{% block wish %}
+    <button id="back">&#11013</button>
+    <label for="back">Go back to the last page to make or revoke wishes.</label>
+{% endblock %}

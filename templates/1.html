@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+
+{% block title %} loggedin {% endblock %}
+
+{% block js %}
+<script src={{ url_for('static', filename='js/code.js') }}></script>
+{% endblock %}
+
+{% block preorder %}
+{% if now_product_num > 0 %}
+<p>
+    <form name="preorder_form_date" action="/pickup" method="post">
+        <input id="now_num" required autocomplete="on" autofocus name="now_num" placeholder="> 0" type="number" min=1 max={{now_product_num}}>
+        <label for="now_num">to pick up</label>
+        <select id="pickup_date" name="pickup_date">
+            <option disable selected>Preferred pick-up date? (necessary)</option>
+            {% if hrs < 17 %}
+                <option>today {{today}}</option>
+            {% endif %}
+            <option>tomorrow {{tomorrow}}</option>
+            <option>the day after tomorrow {{the_day_after_tomorrow}}</option>
+        </select>
+        <input name="pickup_date_submit" type="submit" value="continue">
+    </form>
+    <input class="erase" name="erase" type="button" value="Erase">
+    <label for="erase">all input.</label>
+</p>
+{% else %}
+<h3> -- Sold out -- </h3>
+{% endif %}
+{% endblock %}
+
+{% block wish %}
+<div class="wish">
+    <form name="wish_form" action="/loggingin">
+    {% if wish_num < 0 %}
+        <input required id = "wish_num" autocomplete="on" name="wish_num" placeholder="1" type="number" min=1 max=99>
+        <label for="wish_num">would be nice for you?</label>
+        <input id='yes' type="checkbox" name="yesbox">
+        <label for="yesbox">Fix number on this device.</label>
+        <p>        
+            <input name = "wish_num_submit" type='submit' value='confirm'>
+    {% else %}
+            <input name = "wish_revoke" type='submit' value='revoke'>
+            <label>Revoke the wish you made during this session.</label>            
+    {% endif %}
+        </p>
+    </form>
+{% if wish_num > 0 %}
+    <p>Your wish for {{wish_num}} is heard.</p>
+{% elif wish_num == 0 %}
+    <p>Your wish is dismissed.</p>
+{% else %}
+{% endif %}
+    <p class='notice'>Your wish quantity would be considered when preparing the new comings. THIS IS NOT A PREORDER!</p>
+    <p class='notice'>Please avoid confirming the same wishes twice by page refresh.</p>
+</div>
+{% endblock %}

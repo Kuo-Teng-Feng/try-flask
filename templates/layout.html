@@ -1,0 +1,49 @@
+<!DOCTTYPE html>
+
+<html>
+    <head>
+        <meta name="viewport" content="initial-scale = 1, width = device-width">
+        <link href= {{ url_for('static', filename='css/style.css') }} rel="stylesheet">
+        <title> {% block title %}{% endblock %} </title>
+    </head>
+    <body> 
+        <header>
+            <h1>Mountain Sharp Stone</h1>
+            <h2>One-Word-Pass. No registration required.</h2>
+            <h3>We value your privacy and your right to be free from advertisements.</h3>
+        </header>
+        <content>
+            <div class="pics">
+                <div id="now_product">
+                {% if now_product_num <= 0 %}
+                    <h2>SOLD OUT</h2>
+                {% else %}
+                    <h2>Now Serving...</h2>
+                {% endif %}
+                    <img src={{now_product_src}} alt={{now_product_alt}}></p>
+                    <h3 class="product_name">{{now_product_name}}</h3>
+                    <p class="ingradients">{{now_product_ingradients}}</p>
+                    <p class="product_left"> {{now_product_num}} left for now.</p>
+                    <div class="wish">
+                        {% block preorder %}{% endblock %}
+                    </div>
+                </div>
+                <div id="future_product">
+                    <h2>Coming Soon... </h2>
+                    <h3 class="product_name">{{future_product_name}}</h3>
+                    <p class="ingradients">{{future_product_ingradients}}</p>
+                    <p>No photo for the real products yet.</p>
+                    <p><img src = {{src_for_coming_soon}} width = "15%"></p>
+                    {% block wish %}{% endblock %}
+                </div>
+            </div>
+            <div class="loginform">{% block login %}{% endblock %}</div>
+            <div>
+                <p>Take a look at the <a href="./archive">Archive</a> with no password request.</p>
+                <p><a href="./cancel">Cancel preorder</a></p>
+            </div>
+        </content> 
+        <footer></footer>
+    </body>
+    {% block js %}{% endblock %}
+</html>

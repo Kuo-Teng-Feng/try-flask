@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block title %} preorder complete {% endblock %}
+
+{% block js %}
+<script>document.querySelector('header h2').style.display = 'none';</script>
+<script src={{ url_for('static', filename='js/code.js') }}></script>
+{% endblock %}
+
+{% block preorder %}
+<div>
+    <h2>Dear {{title}},</h2>
+    {% if now_product_num < 0 %} 
+    <p class = "warning">
+        Due to some processing problems we may not be able to fulfill your request perfectly. <strong>Please contact us before your pickup.</strong>
+    </p>
+    {% endif %}
+    <h3>you've preordered {{now_num}} to pick up {{pickup_date}}, {{pickup_time}}.</h3>
+    <p class='notice'>NOTICE: Those that are not picked up on time would be reserved until 18:00 on the very same day.</p>
+    <p class='notice'>To cancel preorder, please use the <strong>cancelpath</strong> we send you per email or call us directly.</p>
+    <p class='notice'>Canceling is no more possible after the selected pick-up date.</p>
+    <h4 class='countdown'></h4>
+</div>
+{% endblock %}

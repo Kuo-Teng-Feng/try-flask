@@ -1,0 +1,26 @@
+<!DOCTTYPE html>
+
+<html>
+    <head>
+        <meta name="viewport" content="initial-scale = 1, width = device-width">
+        <link href="/static/styles.css" rel="stylesheet">
+        <title> cancelpath request </title>
+        <script src={{ url_for('static', filename='js/code.js') }}></script>
+    </head>
+    <body>
+        <header>
+            <h1>Mountain Sharp Stone</h1>
+            <h2></h2>
+        </header>
+        <content>
+            <div>
+                <form action="/cancelled" method="post" name = "cancel_form">
+                    <input required autofocus autocomplete="off" name = "cancelpath" placeholder="Cancel-password?" type="text">
+                    <input type="submit" name="cancel_submit">
+                </form>
+            </div>
+            <p class="notice">Canceling is no more possible after the selected pick-up date.</p>    
+        </content>
+        <footer></footer>
+    </body>
+</html>
