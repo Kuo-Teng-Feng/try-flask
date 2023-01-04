@@ -10,7 +10,8 @@ from data import listcancelpaths, cancelOrderAndUdInventory, mkOrderUdInventory,
 app = Flask(__name__)
 
 infolst = []
-with open("./static/mailsender.txt", "r") as file: # but must use url_for in .html with flask.
+#with open("./static/mailsender.txt", "r") as file: # but must use url_for in .html with flask.
+with open("../for_try-flask/mailsender.txt", "r") as file: # but must use url_for in .html with flask.
     for line in file:
         infolst.append(line.strip())
 app.config["MAIL_DEFAULT_SENDER"] = infolst[0]
@@ -23,7 +24,8 @@ mail = Mail(app)
 
 home = 'http://127.0.0.1:5000/'
 onewordpass = ''
-with open("./static/dontreadme.txt", "r") as file:
+#with open("./static/dontreadme.txt", "r") as file:
+with open("../for_try-flask/dontreadme.txt", "r") as file:
     onewordpass += file.read()
 shifts = ["8:00 ~ 10:00", "10:00 ~ 12:00", "12:00 ~ 14:00", "14:00 ~ 16:00", "16:00 ~ 18:00"]
 today = datetime.date.today()
