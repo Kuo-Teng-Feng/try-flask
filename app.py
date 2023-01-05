@@ -179,7 +179,7 @@ def completing():
     pickup_time = request.form.get("pickup_time")
     if "~" in pickup_time:
         o['pickup_time'] = pickup_time
-    else: # with no specific time choosen.
+    else: # with no specific time chosen.
         o['pickup_time'] = "before 18:00"
     actualtitle = request.form.get("title")
     if actualtitle == None or len(actualtitle.strip()) == 0:

@@ -1,9 +1,7 @@
 import unittest
 import sqlite3
-import json
-from flask import Flask, jsonify
 from inicancelpath import randomizer
-from app import app, loginsetter
+from app import app, loginsetter, logoutsetter
 
 class Test_randomizer(unittest.TestCase):    
     # n-digit.
@@ -142,13 +140,10 @@ class Test_web(unittest.TestCase):
         
         res = self.client.get("/")
         self.assertEqual(res.status_code, 200)
-
-    def test_cancel(self): #14
-        
-        res = self.client.get("/cancel")
-        self.assertEqual(res.status_code, 200)
+        txt = res.text
+        self.assertIn('index', txt[txt.index('<title>') + 7 : txt.index('</title>')])
             
-    def test_login(self): #15
+    def test_login(self): #14
         
         onewordpass = ''
         with open("../for_try-flask/dontreadme.txt", "r") as file:
@@ -156,21 +151,76 @@ class Test_web(unittest.TestCase):
         
         res = self.client.post("/loggingin", data = {"one_word" : onewordpass}) 
         self.assertEqual(res.status_code, 200)
+        txt = res.text
+        self.assertIn('loggedin', txt[txt.index('<title>') + 7 : txt.index('</title>')])
         
-    def test_login_failure_redirect(self): #16
+    def test_login_failure_redirect(self): #15
          
-        res = self.client.post("/loggingin", data = {}) 
+        res = self.client.post("/loggingin", data = {}) #.get in next def.
         self.assertEqual(res.status_code, 302)
-        self.assertIn('href="/"', res.text)
-    
-    #def test_counter(self): #
+        self.assertIn('<a href="/">', res.text)
         
-    #   res = self.client.post("/cancelled", data=json.dumps({"cancelpath" : "whatever"}))
-    #    self.assertEqual(res.status_code, 200)
+    def test_logged_in_and_failure_redirect(self): #16
+        
+        loginsetter() # already loggedin.
+        res = self.client.get("/loggingin")
+        self.assertEqual(res.status_code, 200)
+        txt = res.text
+        self.assertIn('loggedin', txt[txt.index('<title>') + 7 : txt.index('</title>')])
+        logoutsetter() # redirect. Back to default.
+        res = self.client.get("/loggingin")
+        self.assertEqual(res.status_code, 302)
+        self.assertIn('<a href="/">', res.text)
+        # when logout.
+        res = self.client.get("/pickup") #.post in next 2 def.
+        self.assertEqual(res.status_code, 302)
+        self.assertIn('<a href="/">', res.text)
+        # when logout.
+        res = self.client.post("/completing") # no .get
+        self.assertEqual(res.status_code, 302)
+        self.assertIn('<a href="/">', res.text)
+    
+    def test_pickup_date_empty(self): #17
+        
+        loginsetter()
+        res = self.client.post("/pickup", data = {"now_num" : "0", "pickup_date" : "Pr"}) # num would be counted into db, better be 0.
+        self.assertEqual(res.status_code, 200) # go back.
+        txt = res.text
+        self.assertIn('loggedin', txt[txt.index('<title>') + 7 : txt.index('</title>')])
+        logoutsetter() # back to default to avoid error.
+        
+    def test_preorder_complete(self): #18
+        
+        loginsetter()
+        res = self.client.post("/completing", data = {'contact' : 'whatever', 'pickup_time' : ""})
+        self.assertEqual(res.status_code, 200)
+        txt = res.text
+        self.assertIn('preorder complete', txt[txt.index('<title>') + 7 : txt.index('</title>')])
+        logoutsetter() # back to default to avoid error.
+
+    def test_cancel(self): #19
+        
+        res = self.client.get("/cancel")
+        self.assertEqual(res.status_code, 200)
+        txt = res.text
+        self.assertIn('cancelpath request', txt[txt.index('<title>') + 7 : txt.index('</title>')])
+        
+    def test_cancelpath_failure_redirect(self): #20
+        
+        res = self.client.post("/cancelled", data = {})
+        self.assertEqual(res.status_code, 302)
+        self.assertIn('<a href="/cancel">', res.text)
+
+#class Test_client_end_js(unittest.TestCase):
+            
+    #def test_counter(self):
+        
+    
         
     
     
         
 
-if __name__ == "__main__":
+if __name__ == "__main__": # must be the last.
+    
     unittest.main()
