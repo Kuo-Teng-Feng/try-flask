@@ -58,6 +58,14 @@ o['now_product_num'] = now_product[5]
 cur.close()
 con.close()
 
+def loginsetter(): # for unittest etc.
+    
+    o['login'] = True
+    
+def logoutsetter(): # for unittest etc.
+    
+    o['login'] = False
+
 @app.route("/") # decorator
 def index():
     
@@ -81,7 +89,7 @@ def loggingin():
         wish_dealer()
         return loggedin()
     if request.method == "POST" and request.form.get("one_word") == onewordpass:
-        o['login'] = True
+        #o['login'] = True # relocated to loggedin()
         return loggedin()
     o['login'] = False # important! (wrong pass or session breaks.)
     return redirect("/")
@@ -100,6 +108,7 @@ def wish_dealer():
 
 def loggedin():
 
+    o['login'] = True # relocated from loggingin()
     return render_template(
         "1.html",
         src_for_coming_soon = src_for_coming_soon,
@@ -224,7 +233,7 @@ def email(sms, html, tolst):
     mail.send(message)
         
 # cancel
-@app.route("/cancel", methods=["GET", "POST"]) # without "GET" goes nowhere.
+@app.route("/cancel")
 def canceling():
     
     return render_template("29.html")
@@ -244,5 +253,5 @@ def cancelled():
             cancelpath = cancelpath
             )
     return redirect("/cancel") # 'return' is needed.
-    
+
         

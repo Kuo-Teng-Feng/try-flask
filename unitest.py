@@ -1,8 +1,11 @@
 import unittest
 import sqlite3
+import json
+from flask import Flask, jsonify
 from inicancelpath import randomizer
+from app import app, loginsetter
 
-class test_randomizer(unittest.TestCase):    
+class Test_randomizer(unittest.TestCase):    
     # n-digit.
     def test_randomizer_4(self): # prefix "test_" is necessary.      
         self.assertEqual(len(randomizer(4)), 4)
@@ -25,7 +28,7 @@ now_product_col = ["id", "opendate", "name", "ingradients", "src", "alt", "num"]
 future_product_col = ["name", "ingradients", "src", "alt", "num"]
 preorder_col = ["id", "opendate", "pickup_date", "pickup_time", "name", "contact", "product_id", "num", "cancelpath", "phone"]
 
-class test_db_structure(unittest.TestCase):   
+class Test_db_structure(unittest.TestCase):   
        
     def test_dbnames(self): #6
         
@@ -80,7 +83,7 @@ class test_db_structure(unittest.TestCase):
             if ele not in comm:
                 self.assertIn(ele, comm)
                 
-class test_db_validity(unittest.TestCase):
+class Test_db_validity(unittest.TestCase):
     
     def test_now_product(self): #10
         
@@ -112,7 +115,7 @@ class test_db_validity(unittest.TestCase):
                 if str(ele) == "" or ele == None:
                     self.assertEqual(ele, f"{future_product_col[i]} of {tp[0]}, {tp[2]}")
 
-    def test_preorder(self): #10
+    def test_preorder(self): #12
         
         con = sqlite3.connect("product.db")
         cur = con.cursor()
@@ -127,14 +130,46 @@ class test_db_validity(unittest.TestCase):
                 if str(ele) == "" or ele == None:
                     self.assertEqual(ele, f"{preorder_col[i]} of {tp[2]}, {tp[5]}")
         
-#class test_web(unittest.TestCase): # selenium - solely for chrome - or something else
+class Test_web(unittest.TestCase):
     
-#    def test_accessibility(self):
+    def setUp(self): 
         
+        self.app = app
+        app.config['TESTING'] = True
+        self.client = app.test_client()
 
-
-#    def test_performance(self):
+    def test_index(self): #13
         
+        res = self.client.get("/")
+        self.assertEqual(res.status_code, 200)
+
+    def test_cancel(self): #14
+        
+        res = self.client.get("/cancel")
+        self.assertEqual(res.status_code, 200)
+            
+    def test_login(self): #15
+        
+        onewordpass = ''
+        with open("../for_try-flask/dontreadme.txt", "r") as file:
+            onewordpass += file.read()
+        
+        res = self.client.post("/loggingin", data = {"one_word" : onewordpass}) 
+        self.assertEqual(res.status_code, 200)
+        
+    def test_login_failure_redirect(self): #16
+         
+        res = self.client.post("/loggingin", data = {}) 
+        self.assertEqual(res.status_code, 302)
+        self.assertIn('href="/"', res.text)
+    
+    #def test_counter(self): #
+        
+    #   res = self.client.post("/cancelled", data=json.dumps({"cancelpath" : "whatever"}))
+    #    self.assertEqual(res.status_code, 200)
+        
+    
+    
         
 
 if __name__ == "__main__":
