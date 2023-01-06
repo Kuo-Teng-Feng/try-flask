@@ -140,8 +140,9 @@ document.addEventListener('DOMContentLoaded', () => {
         contact.value = "";
         phone.value = "";
         title.value = "";
-        RM.checked = false;
         RM.removeAttribute("disabled");
+        RM.checked = false;
+        
     }
 })
 

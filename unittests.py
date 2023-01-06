@@ -127,7 +127,8 @@ class Test_db_validity(unittest.TestCase):
                 ele = tp[i]
                 if str(ele) == "" or ele == None:
                     self.assertEqual(ele, f"{preorder_col[i]} of {tp[2]}, {tp[5]}")
-        
+
+#webapp        
 class Test_web(unittest.TestCase):
     
     def setUp(self): 
@@ -210,16 +211,6 @@ class Test_web(unittest.TestCase):
         res = self.client.post("/cancelled", data = {})
         self.assertEqual(res.status_code, 302)
         self.assertIn('<a href="/cancel">', res.text)
-
-#class Test_client_end_js(unittest.TestCase):
-            
-    #def test_counter(self):
-        
-    
-        
-    
-    
-        
 
 if __name__ == "__main__": # must be the last.
     
