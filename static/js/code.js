@@ -9,15 +9,6 @@ erase.onmouseout = () => {
     eraselabel.innerHTML = "all input.";
 }
 
-// 2.html, 3.html: count down be4 redirect. class name in common.
-let countdown = 20;
-setInterval(() => { // no execution without appointed tag/class/id.
-    document.querySelector('.countdown').innerHTML = 
-    `Redirect after ${countdown} seconds`;
-    countdown -= 1;
-    if (countdown == -1) { location.href = '/loggingin';}
-}, 1000);
-
 // if each one login session is limited to 5 min, then n = 300.
 let n = 300;
 setInterval(() => {
@@ -25,6 +16,15 @@ setInterval(() => {
     document.querySelector('header h2').innerHTML = 
     `Auto Logout after ${n} seconds.`;
     if (n == -1) { location.href = "/";}
+}, 1000);
+
+// 2.html, 3.html: count down be4 redirect. class name in common.
+let countdown = 20;
+setInterval(() => { // no execution without appointed tag/class/id.
+    document.querySelector('.countdown').innerHTML = 
+    `Redirect after ${countdown} seconds`;
+    countdown -= 1;
+    if (countdown == -1) { location.href = '/loggingin';}
 }, 1000);
 
 //1.html: wish num, keyed-in data saved in different ways.
@@ -141,8 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
         phone.value = "";
         title.value = "";
         RM.removeAttribute("disabled");
-        RM.checked = false;
-        
+        RM.checked = false;        
     }
 })
 
