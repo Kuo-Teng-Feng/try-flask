@@ -13,7 +13,7 @@ erase.onmouseout = () => {
 let n = 300;
 setInterval(() => {
     n -= 1;
-    document.querySelector('header h2').innerHTML = 
+    document.querySelector('#logincountdown').innerHTML = 
     `Auto Logout after ${n} seconds.`;
     if (n == -1) { location.href = "/";}
 }, 1000);
