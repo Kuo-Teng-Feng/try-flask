@@ -1,5 +1,6 @@
 import sqlite3
 import datetime
+#from browser_test import NO_sessionStorage_involved
 
 # today.strftime('%Y-%m-%d'), "2022-10-16"
 today = datetime.date.today()
@@ -18,9 +19,11 @@ cur = con.cursor()
 con.commit()
 #res = cur.execute("SELECT name FROM sqlite_master WHERE type='table'")
 #print(res.fetchall())
-#res = cur.execute("SELECT id, cancelpath FROM preorder WHERE id > 10")
+res = cur.execute("SELECT id, cancelpath FROM preorder WHERE id > 10")
 #print(res.fetchall())
-res = cur.execute("SELECT num FROM now_product")
-print(res.fetchone())
+#res = cur.execute("SELECT num FROM now_product")
+#print(res.fetchone())
+#print(res.fetchall())
 cur.close()
 con.close()
+#print(NO_sessionStorage_involved())

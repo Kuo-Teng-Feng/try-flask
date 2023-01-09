@@ -252,6 +252,11 @@ def cancelled():
             "3.html",
             cancelpath = cancelpath
             )
+    if cancelpath == "test":
+        return render_template(
+            "3.html",
+            cancelpath = "...Nope. Sorry, it's just a test. Pls try again."
+            )
     return redirect("/cancel") # 'return' is needed.
 
         
