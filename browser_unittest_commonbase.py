@@ -1,3 +1,4 @@
+# Priority: Chrome, Firefox, Edge, Ie. No Opera. Test only the first one found working.
 # selenium. No sessionStorage involved. Nor db.
 import unittest
 import os
@@ -15,7 +16,7 @@ from time import sleep # only if there's no applicable EC for WebDriverWait.
 def uri(filename):        
     return pathlib.Path(os.path.abspath("templates")).as_uri() + f"/{filename}"
 
-driver = None # Priority: Chrome, Firefox, Edge, Ie. No Opera. Test only one.
+driver = None # Priority: Chrome, Firefox, Edge, Ie. No Opera. Test only the first one found working.
 
 try:
     driver = webdriver.Chrome() 

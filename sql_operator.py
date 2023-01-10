@@ -1,6 +1,6 @@
 import sqlite3
 import datetime
-#from browser_test import NO_sessionStorage_involved
+#from winreg import HKEY_CURRENT_USER, OpenKey, QueryValue
 
 # today.strftime('%Y-%m-%d'), "2022-10-16"
 today = datetime.date.today()
@@ -27,3 +27,9 @@ res = cur.execute("SELECT id, cancelpath FROM preorder WHERE id > 10")
 cur.close()
 con.close()
 #print(NO_sessionStorage_involved())
+# By 'weixin_39978350' from https://blog.csdn.net/weixin_39978350/article/details/111457178
+#def find_default_browser():
+#    with OpenKey(HKEY_CURRENT_USER, r"Software\Classes\http\shell\open\command") as key:
+#        cmd = QueryValue(key, None)
+#        print(cmd)
+#find_default_browser()

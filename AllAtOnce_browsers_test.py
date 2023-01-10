@@ -1,8 +1,7 @@
-# No unittest version for testing various browsers at once. 
-# Not better. No error clarification nor fixation.
+# No unittest version for testing various browsers all at once: Chrome, Firefox, Edge, Ie. No Opera.
+# If this passed, no further selenium tests needed.
 # selenium. No sessionStorage involved. Nor db.
-import os
-import pathlib 
+
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
@@ -12,23 +11,51 @@ from selenium.webdriver.support.select import Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait # Important to wait for the web to run. Or: 
 from time import sleep # only if there's no applicable EC for WebDriverWait.
+from uri_html import uri
 
-def main(driver):
+l = ['Chrome', 'Firefox', 'Edge', 'IE']
 
-    NO_sessionStorage_involved(driver) #1
-    test_back_button_11(driver) #2
-    test_erase_button_1(driver) #3
-    test_erase_button_11(driver) #4
-    test_confirm_1(driver) #5
-    test_continue_1(driver) #6
-    test_complete_11(driver) #7
-    test_cancel_submit_29(driver) #8
-    #test_login_countdown_1(driver)
-    #test_countdown_2(driver)
-    #test_labels_1(driver)
+def browser_check():
+    
+    try:
+        webdriver.Chrome()
+    except:
+        l.remove('Chrome')
+        print("No Chrome working.")
+    
+    try:
+        webdriver.Firefox()
+    except:
+        l.remove('Firefox')
+        print("No Firefox working.")
+        
+    try:
+        webdriver.Edge()
+    except:
+        l.remove('Edge')
+        print("No Edge working.")
 
-def uri(filename):        
-    return pathlib.Path(os.path.abspath("templates")).as_uri() + f"/{filename}"
+    try:
+        webdriver.Ie()
+    except:
+        l.remove('IE')
+        print("No Ie working.")
+
+def test(driver): # drivers left to be assigned in "__main__".
+    
+    NO_sessionStorage_involved() #1
+    test_back_button_11() #2
+    test_erase_button_1() #3
+    test_erase_button_11() #4
+    test_confirm_1() #5
+    test_continue_1() #6
+    test_complete_11() #7
+    test_cancel_submit_29() #8
+    #test_login_countdown_1()
+    #test_countdown_2()
+    #test_labels_1()
+
+# Test process begin:
 
 # browser name = driver.name
 # html = driver.page_source
@@ -82,7 +109,7 @@ def fulfill_11(): # fulfill all inputs in 11.html without Key.Enter
     title.send_keys("title surname")
     WebDriverWait(driver,  10, 0.5).until(EC.text_to_be_present_in_element_value((By.ID, "title"), "title surname"))
         
-def NO_sessionStorage_involved(driver): #1 and also 1.html
+def NO_sessionStorage_involved(): #1 and also 1.html
         
     fulfill_1()       
     driver.refresh() # Elements must be reread.
@@ -90,7 +117,7 @@ def NO_sessionStorage_involved(driver): #1 and also 1.html
     assert "?" in driver.find_element(By.ID, "pickup_date").get_attribute("value")
     assert EC.text_to_be_present_in_element_value((By.ID, "now_num"), "")
 
-def test_back_button_11(driver): #2
+def test_back_button_11(): #2
         
     driver.get(uri("11.html"))
     origin = driver.current_url
@@ -101,7 +128,7 @@ def test_back_button_11(driver): #2
     driver.back()
     assert EC.url_to_be(origin)
 
-def test_erase_button_1(driver): #3
+def test_erase_button_1(): #3
         
     fulfill_1()
         
@@ -111,7 +138,7 @@ def test_erase_button_1(driver): #3
     assert EC.text_to_be_present_in_element_value((By.ID, "now_num"), "")
     assert EC.text_to_be_present_in_element_value((By.ID, "pickup_date"), "")
         
-def test_erase_button_11(driver): #4
+def test_erase_button_11(): #4
         
     fulfill_11()
         
@@ -133,7 +160,7 @@ def test_erase_button_11(driver): #4
     assert RM.is_enabled() 
     assert not RM.is_selected()
     
-def test_confirm_1(driver): #5
+def test_confirm_1(): #5
         
     fulfill_1()
     origin = driver.current_url
@@ -144,7 +171,7 @@ def test_confirm_1(driver): #5
     assert EC.url_to_be(origin)
     # wish_revoke untestable 'cause storageSession not involved.
         
-def test_continue_1(driver): #6
+def test_continue_1(): #6
         
     fulfill_1()
     origin = driver.current_url
@@ -154,7 +181,7 @@ def test_continue_1(driver): #6
     conti.submit()
     assert EC.url_changes(origin)
         
-def test_complete_11(driver): #7
+def test_complete_11(): #7
         
     fulfill_11()
     origin = driver.current_url
@@ -164,7 +191,7 @@ def test_complete_11(driver): #7
     complete.submit()
     assert EC.url_changes(origin)
         
-def test_cancel_submit_29(driver): #8
+def test_cancel_submit_29(): #8
         
     tests = ['', 'test']
 
@@ -179,32 +206,7 @@ def test_cancel_submit_29(driver): #8
             assert EC.url_to_be(origin)
         assert EC.url_changes(origin)
 
-if __name__ == '__main__':
-
-    # Chrome, Firefox, Edge, Ie. No Opera.
-    try:
-        driver = webdriver.Chrome()
-        main(driver)
-    except:
-        pass
-    try:
-        driver = webdriver.Firefox()
-        main(driver)
-    except:
-        pass
-    try:
-        driver = webdriver.Edge()
-        main(driver)
-    except:
-        pass
-    try:
-        driver = webdriver.Ie()
-        main(driver)
-    except:
-        pass
-    
-
-def test_login_countdown_1(driver): #
+def test_login_countdown_1(): # The followings not quite working as test self.
         
     driver.get(uri("1.html")) # element only found static on layout.html
         
@@ -215,7 +217,7 @@ def test_login_countdown_1(driver): #
     WebDriverWait(driver,  10, 0.5).until(EC.visibility_of_all_elements_located((By.TAG_NAME, "html")))
     assert t0 != driver.find_element(By.ID, 'logincountdown').text
         
-def test_countdown_2(driver): # besides test, visibility problem does exist.
+def test_countdown_2(): # besides test problem, visibility problem does exist.
         
     driver.get(uri("2.html"))
         
@@ -226,7 +228,7 @@ def test_countdown_2(driver): # besides test, visibility problem does exist.
     WebDriverWait(driver,  10, 0.5).until(EC.visibility_of_all_elements_located((By.TAG_NAME, "html")))
     assert t0 != driver.find_element(By.CLASS_NAME, 'countdown').text
 
-def test_labels_1(driver): #
+def test_labels_1(): #
         
     fulfill_1()
         
@@ -246,4 +248,31 @@ def test_labels_1(driver): #
     WebDriverWait(driver,  10, 0.5).until(EC.visibility_of_all_elements_located((By.TAG_NAME, "html")))
     assert lt != driver.find_element(By.CSS_SELECTOR, 'label[for="yesbox"]').text
                                     
-#def test_sign_11(driver): #
+#def test_sign_11(): #
+
+if __name__ == '__main__': # Running without variable in def() must imply "driver" being explicitly appointed here.
+    
+    browser_check() # [str, str...]
+    print("Checking browsers: " + ', '.join(l))
+    
+    for ele in l:
+        
+        if ele == "Chrome":
+            driver = webdriver.Chrome()
+            test(driver)
+            print("Chrome checked.")
+            
+        if ele == "Firefox":
+            driver = webdriver.Firefox()
+            test(driver)
+            print("Firefox checked.")
+        
+        if ele == "Edge":
+            driver = webdriver.Edge()
+            test(driver)
+            print("Edge checked.")
+
+        if ele == "IE":
+            driver = webdriver.Ie()
+            test(driver)
+            print("IE checked.")
