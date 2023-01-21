@@ -1,4 +1,4 @@
-# No unittest version for testing various browsers all at once: Chrome, Firefox, Edge, Ie. No Opera.
+# No unittest version. For testing various browsers all at once: Chrome, Firefox, Edge, Ie. No Opera.
 # If this passed, no further selenium tests needed.
 # selenium. No sessionStorage involved. Nor db.
 
@@ -55,8 +55,6 @@ def test(driver): # drivers left to be assigned in "__main__".
     #test_countdown_2()
     #test_labels_1()
 
-# Test process begin:
-
 # browser name = driver.name
 # html = driver.page_source
 # next page = driver.forward()
@@ -65,6 +63,7 @@ def test(driver): # drivers left to be assigned in "__main__".
 # driver.quit(): quit the whole browser.
 # Use "inspect" to locate elements. "view source" returns only static source code without js execution.
 
+# Test process begin:
 def fulfill_1(): # fulfill all inputs in 1.html without Key.Enter
 
     driver.get(uri("1.html"))
