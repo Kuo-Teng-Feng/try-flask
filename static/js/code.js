@@ -11,21 +11,15 @@ erase.onmouseout = () => {
 
 // if each one login session is limited to 5 min, then n = 300.
 let n = 300;
-setInterval(() => {
+countdown2 = function() {
     n -= 1;
     document.querySelector('#logincountdown').innerHTML = 
     `Auto Logout after ${n} seconds.`;
     if (n == -1) { location.href = "/";}
-}, 1000);
-
-// 2.html, 3.html: count down be4 redirect. class name in common.
-let countdown = 60;
-setInterval(() => { // no execution without appointed tag/class/id.
-    countdown -= 1;
-    document.querySelector('.countdown').innerHTML = 
-    `Redirect after ${countdown} seconds`;
-    if (countdown == -1) { location.href = '/loggingin';}
-}, 1000);
+}
+setInterval(//() => {
+    countdown2, 1000) //the content of coundown2.
+//}, 1000);
 
 //1.html: wish num, keyed-in data saved in different ways.
 let numStorage = sessionStorage.getItem("now_num");

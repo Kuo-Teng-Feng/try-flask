@@ -264,4 +264,4 @@ def cancelled():
 
 if __name__ == "__main__": # alternative to venv, but without email sending function.
 
-    app.run() # app.run(debug=True) could cause...
+    app.run() # app.run(debug=True), if perfection needed.

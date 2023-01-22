@@ -3,8 +3,15 @@
 {% block title %} preorder complete {% endblock %}
 
 {% block js %}
-
-<script src={{ url_for('static', filename='js/code.js') }}></script>
+<script>
+    let countdown = 60;
+    setInterval(() => {
+    countdown -= 1;
+    document.querySelector('.countdown').innerHTML = 
+    `Redirect after ${countdown} seconds`;
+    if (countdown == -1) { location.href = '/loggingin';}
+    }, 1000);
+</script>
 {% endblock %}
 
 {% block preorder %}

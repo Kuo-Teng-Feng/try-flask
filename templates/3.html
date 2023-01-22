@@ -5,6 +5,15 @@
         <meta name="viewport" content="initial-scale = 1, width = device-width">
         <link href="/static/styles.css" rel="stylesheet">
         <title> cancelled </title>
+        <script>
+            let countdown = 60;
+            setInterval(() => {
+            countdown -= 1;
+            document.querySelector('.countdown').innerHTML = 
+            `Back to homepage after ${countdown} seconds`;
+            if (countdown == -1) { location.href = '/';}
+            }, 1000);
+        </script>
     </head>
     <body>
         <content>
@@ -12,6 +21,5 @@
             <h2 class='countdown'></h2>
         </content>
         <footer></footer>
-        <script src={{ url_for('static', filename='js/code.js') }}></script>
     </body>
 </html>

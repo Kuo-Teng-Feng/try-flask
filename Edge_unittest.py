@@ -262,6 +262,25 @@ class Test_timing_js(unittest.TestCase): # works here, but not there?
             sleep(2)
             self.assertNotEqual(t1, driver.find_element(By.CLASS_NAME, "countdown").text)
 
+    def test_1_and_11_extends_layout(self): #11
+
+        js = """
+        let n = 300;
+        setInterval(() => {
+        n -= 1;
+        document.querySelector('#logincountdown').innerHTML = 
+        `Auto Logout after ${n} seconds.`;
+        if (n == -1) { location.href = "/";}
+        }, 1000);
+        """
+
+        driver.get(uri("layout.html"))
+        driver.execute_script(js)
+        WebDriverWait(driver, 10, 0.5).until(EC.visibility_of_element_located((By.ID, "logincountdown")))
+        t1 = driver.find_element(By.ID, "logincountdown").text
+        sleep(2)
+        self.assertNotEqual(t1, driver.find_element(By.ID, "logincountdown").text)
+
 if __name__ == "__main__":
 
     unittest.main()
@@ -322,7 +341,7 @@ class Test_countdown(unittest.TestCase): # Tests self not working.
         WebDriverWait(driver, 10, 0.5).until(EC.visibility_of_all_elements_located((By.TAG_NAME, "html")))
         self.assertNotEqual(t0, driver.find_element(By.ID, 'logincountdown').text)
         
-    def test_countdown_2(self): # besides test, visibility problem does exist.
+    def test_countdown_2(self):
         
         driver.get(uri("2.html"))
         
