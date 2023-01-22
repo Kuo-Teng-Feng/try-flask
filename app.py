@@ -36,27 +36,29 @@ src_for_coming_soon = "https://s.yimg.com/ny/api/res/1.2/Jyx.0_PgY4c2sIqYMtsB5g-
 
 o = {} # operator
 
-con = sqlite3.connect("product.db")
-cur = con.cursor()
+def operator():
 
-res = cur.execute("SELECT name, ingradients, num FROM future_product")
-future_product = res.fetchone() # mk room for list later
-future_product_name = future_product[0]
-future_product_ingradients = future_product[1]
-o['future_product_num'] = future_product[2]
-o['wish_num'] = -1;
+    con = sqlite3.connect("product.db")
+    cur = con.cursor()
 
-res = cur.execute("SELECT id, name, ingradients, src, alt, num FROM now_product")
-now_product = res.fetchone() # mk room for list later
-o['now_product_id'] = now_product[0]
-o['now_product_name'] = now_product[1]
-now_product_ingradients = now_product[2]
-now_product_src = now_product[3]
-now_product_alt = now_product[4]
-o['now_product_num'] = now_product[5]
+    res = cur.execute("SELECT name, ingradients, num FROM future_product")
+    future_product = res.fetchone() # mk room for list later
+    o['future_product_name'] = future_product[0]
+    o['future_product_ingradients'] = future_product[1]
+    o['future_product_num'] = future_product[2]
+    o['wish_num'] = -1;
 
-cur.close()
-con.close()
+    res = cur.execute("SELECT id, name, ingradients, src, alt, num FROM now_product")
+    now_product = res.fetchone() # mk room for list later
+    o['now_product_id'] = now_product[0]
+    o['now_product_name'] = now_product[1]
+    o['now_product_ingradients'] = now_product[2]
+    o['now_product_src'] = now_product[3]
+    o['now_product_alt'] = now_product[4]
+    o['now_product_num'] = now_product[5]
+
+    cur.close()
+    con.close()
 
 def loginsetter(): # for unittest etc.
     
@@ -69,17 +71,18 @@ def logoutsetter(): # for unittest etc.
 @app.route("/") # decorator
 def index():
     
+    operator() # refresh db link every page reloading.
     o['login'] = False # important!
     return render_template(
         "0.html",
         src_for_coming_soon = src_for_coming_soon,
-        future_product_name = future_product_name,
-        future_product_ingradients = future_product_ingradients,
+        future_product_name = o['future_product_name'],
+        future_product_ingradients = o['future_product_ingradients'],
         now_product_num = o['now_product_num'],
-        now_product_src = now_product_src,
-        now_product_alt = now_product_alt,
+        now_product_src = o['now_product_src'],
+        now_product_alt = o['now_product_alt'],
         now_product_name = o['now_product_name'],
-        now_product_ingradients = now_product_ingradients
+        now_product_ingradients = o['now_product_ingradients']
         )
 
 @app.route("/loggingin", methods=["POST", "GET"]) # decorator
@@ -99,11 +102,11 @@ def wish_dealer():
     wish_num = request.args.get("wish_num") # str.
     if request.args.get("wish_revoke"):
         o['future_product_num'] -= o['wish_num']
-        mkWish(future_product_name, o['future_product_num'])
+        mkWish(o['future_product_name'], o['future_product_num'])
         o['wish_num'] = -1
     if request.args.get("wish_num_submit"):
         o['future_product_num'] += int(wish_num) # type, again. = =
-        mkWish(future_product_name, o['future_product_num'])
+        mkWish(o['future_product_name'], o['future_product_num'])
         o['wish_num'] = int(wish_num)
 
 def loggedin():
@@ -112,13 +115,13 @@ def loggedin():
     return render_template(
         "1.html",
         src_for_coming_soon = src_for_coming_soon,
-        future_product_name = future_product_name,
-        future_product_ingradients = future_product_ingradients,
+        future_product_name = o['future_product_name'],
+        future_product_ingradients = o['future_product_ingradients'],
         now_product_num = o['now_product_num'],
-        now_product_src = now_product_src,
-        now_product_alt = now_product_alt,
+        now_product_src = o['now_product_src'],
+        now_product_alt = o['now_product_alt'],
         now_product_name = o['now_product_name'],
-        now_product_ingradients = now_product_ingradients,
+        now_product_ingradients = o['now_product_ingradients'],
         today = today,
         tomorrow = tomorrow,
         the_day_after_tomorrow = the_day_after_tomorrow,
@@ -154,13 +157,13 @@ def pickup():
     return render_template(
         "11.html",
         src_for_coming_soon = src_for_coming_soon,
-        future_product_name = future_product_name,
-        future_product_ingradients = future_product_ingradients,
+        future_product_name = o['future_product_name'],
+        future_product_ingradients = o['future_product_ingradients'],
         now_product_num = o['now_product_num'],
-        now_product_src = now_product_src,
-        now_product_alt = now_product_alt,
+        now_product_src = o['now_product_src'],
+        now_product_alt = o['now_product_alt'],
         now_product_name = o['now_product_name'],
-        now_product_ingradients = now_product_ingradients,
+        now_product_ingradients = o['now_product_ingradients'],
         now_num = now_num,
         pickup_date = pickup_date,
         actual_shifts = actual_shifts,
@@ -213,13 +216,13 @@ def completing():
     return render_template(
         "2.html",
         src_for_coming_soon = src_for_coming_soon,
-        future_product_name = future_product_name,
-        future_product_ingradients = future_product_ingradients,
+        future_product_name = o['future_product_name'],
+        future_product_ingradients = o['future_product_ingradients'],
         now_product_num = o['now_product_num'], # update.
-        now_product_src = now_product_src,
-        now_product_alt = now_product_alt,
+        now_product_src = o['now_product_src'],
+        now_product_alt = o['now_product_alt'],
         now_product_name = o['now_product_name'],
-        now_product_ingradients = now_product_ingradients,
+        now_product_ingradients = o['now_product_ingradients'],
         now_num = o['now_num'], 
         pickup_date = o['pickup_date'],
         title = o['title'],
@@ -259,4 +262,6 @@ def cancelled():
             )
     return redirect("/cancel") # 'return' is needed.
 
-        
+if __name__ == "__main__": # alternative to venv, but without email sending function.
+
+    app.run() # app.run(debug=True) could cause...

@@ -51,7 +51,11 @@ def fulfill_1(): # fulfill all inputs in 1.html without Key.Enter
     check = driver.find_element(By.ID, "yes")
     WebDriverWait(driver, 10, 0.5).until(EC.element_to_be_clickable(check))
     check.click() # check.checked = true; 
-    js = "const check = document.querySelector('#yes'); check.setAttribute('disabled', 'disabled'); document.querySelector('body > div > form > label:nth-child(4)').innerHTML = 'Fixed';"
+    js = """
+    const check = document.querySelector('#yes'); 
+    check.setAttribute('disabled', 'disabled'); 
+    document.querySelector('body > div > form > label:nth-child(4)').innerHTML = 'Fixed';
+    """
     driver.execute_script(js)
 
 def fulfill_11(): # fulfill all inputs in 11.html without Key.Enter
@@ -192,21 +196,31 @@ class Test_text_change_js(unittest.TestCase): # not redundant at all?!
         erase = driver.find_element(By.CLASS_NAME, "erase") # found.
         WebDriverWait(driver, 10, 0.5).until(EC.visibility_of(erase))
         
-        js_onmouseover = "document.querySelector('.erase').onmouseover = () => { document.querySelector('body > label').innerHTML = 'Recommended on public or shared devices.'}"
+        js_onmouseover = """
+        document.querySelector('.erase').onmouseover = () => { 
+        document.querySelector('body > label').innerHTML = 
+        'Recommended on public or shared devices.'}
+        """
         driver.execute_script(js_onmouseover)
         ac.move_to_element(erase).perform() # erase.onmouseover
+        sleep(1)
         self.assertNotEqual(labeltext, driver.find_element(By.CSS_SELECTOR, 'body > label').text) # or .get_attribute("innerHTML")
 
         js_onmouseout = js_onmouseover.replace("onmouseover", "onmouseout").replace("Recommended on public or shared devices.", "all input.")
         driver.execute_script(js_onmouseout)
         ac.move_by_offset(0, erase.size['height']).perform() # vaguely like erase.onmouseout
+        sleep(1)
         self.assertEqual(labeltext, driver.find_element(By.CSS_SELECTOR, 'body > label').text) # or .get_attribute("innerHTML")
 
         wish_num = driver.find_element(By.ID, "wish_num")
         wish_num.clear()
         wish_num.send_keys(1)
         WebDriverWait(driver, 10, 0.5).until(EC.text_to_be_present_in_element_value((By.ID, "wish_num"), "1"))
-        js_enable_check = "const check = document.querySelector('#yes'); check.removeAttribute('disabled'); document.querySelector('body > div > form > label:nth-child(4)').innerHTML = 'Fix number on this device.';"
+        js_enable_check = """
+        const check = document.querySelector('#yes'); 
+        check.removeAttribute('disabled'); 
+        document.querySelector('body > div > form > label:nth-child(4)').innerHTML = 'Fix number on this device.';
+        """
         driver.execute_script(js_enable_check)
         
         WebDriverWait(driver, 10, 0.5).until(EC.text_to_be_present_in_element_attribute((By.CSS_SELECTOR, 'label[for="yesbox"]'), 'innerHTML', 'Fix number on this device.'))
@@ -215,7 +229,11 @@ class Test_text_change_js(unittest.TestCase): # not redundant at all?!
         check = driver.find_element(By.ID, "yes")
         WebDriverWait(driver, 10, 0.5).until(EC.element_to_be_clickable(check))
         check.click()
-        js_disable_check = "const check = document.querySelector('#yes'); check.setAttribute('disabled', 'disabled'); document.querySelector('body > div > form > label:nth-child(4)').innerHTML = 'Fixed';"
+        js_disable_check = """
+        const check = document.querySelector('#yes'); 
+        check.setAttribute('disabled', 'disabled'); 
+        document.querySelector('body > div > form > label:nth-child(4)').innerHTML = 'Fixed';
+        """
         driver.execute_script(js_disable_check)
         self.assertFalse(check.is_enabled())
         self.assertNotEqual(lt, driver.find_element(By.CSS_SELECTOR, 'label[for="yesbox"]').text)
