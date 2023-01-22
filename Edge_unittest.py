@@ -220,9 +220,54 @@ class Test_text_change_js(unittest.TestCase): # not redundant at all?!
         self.assertFalse(check.is_enabled())
         self.assertNotEqual(lt, driver.find_element(By.CSS_SELECTOR, 'label[for="yesbox"]').text)
 
+class Test_timing_js(unittest.TestCase): # works here, but not there?
+
+    def test_2_and_3(self): #10
+
+        js = """
+        let countdown = 60;
+        setInterval(() => {
+        countdown -= 1;
+        document.querySelector('.countdown').innerHTML = 
+        `Redirect after ${countdown} seconds`;
+        if (countdown == -1) { location.href = '/loggingin';}
+        }, 1000);
+        """
+
+        for ele in ["2", "3"]:
+
+            driver.get(uri(ele + ".html"))
+            # if ele == "2": self.assertFalse(driver.find_element(By.CSS_SELECTOR, "header > h2").is_displayed()) # not there. 'cause of extension.
+            driver.execute_script(js)
+            WebDriverWait(driver, 10, 0.5).until(EC.visibility_of_element_located((By.CLASS_NAME, "countdown")))
+            t1 = driver.find_element(By.CLASS_NAME, "countdown").text
+            sleep(2)
+            self.assertNotEqual(t1, driver.find_element(By.CLASS_NAME, "countdown").text)
+
 if __name__ == "__main__":
 
     unittest.main()
+
+    def test_1_and_11(self): # works there, but not here. 'cause of extension.
+
+        js = """
+        let n = 300;
+        setInterval(() => {
+        n -= 1;
+        document.querySelector('#logincountdown').innerHTML = 
+        `Auto Logout after ${n} seconds.`;
+        if (n == -1) { location.href = "/";}
+        }, 1000);
+        """
+
+        for ele in ["1", "11"]:
+
+            driver.get(uri(ele + ".html"))
+            driver.execute_script(js)
+            WebDriverWait(driver, 10, 0.5).until(EC.visibility_of_element_located((By.ID, "logincountdown")))
+            t1 = driver.find_element(By.ID, "logincountdown").text
+            sleep(2)
+            self.assertNotEqual(t1, driver.find_element(By.ID, "logincountdown").text)        
 
 class Test_text_change(unittest.TestCase): # Tests self not working. 
     

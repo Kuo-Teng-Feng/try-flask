@@ -19,11 +19,11 @@ setInterval(() => {
 }, 1000);
 
 // 2.html, 3.html: count down be4 redirect. class name in common.
-let countdown = 20;
+let countdown = 60;
 setInterval(() => { // no execution without appointed tag/class/id.
+    countdown -= 1;
     document.querySelector('.countdown').innerHTML = 
     `Redirect after ${countdown} seconds`;
-    countdown -= 1;
     if (countdown == -1) { location.href = '/loggingin';}
 }, 1000);
 
